@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:1347 --noreload
+web: gunicorn --bind 0.0.0.0:1347 wsgi
