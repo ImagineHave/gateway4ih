@@ -1,5 +1,5 @@
 from facebook import GraphAPI
-from flask import Flask, jsonify, request #, session
+from flask import Flask, jsonify, request, redirect #, session
 from app.models import User
 import pymongo
 import os
@@ -13,8 +13,6 @@ if is_prod:
     client = pymongo.MongoClient(uri)
     db = client.get_default_database()
 
-if __name__ == "__main__":    
-    app.run()
 
 @app.route('/authoriseUser', methods=['POST'])
 def signin():
@@ -76,3 +74,6 @@ def isAuthorised():
     response = jsonify({"authorisedStatus":"True"})
     response.status_code = 200
     return response
+
+if __name__ == "__main__":    
+    app.run()
