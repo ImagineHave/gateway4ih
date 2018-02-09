@@ -1,17 +1,28 @@
+from app import app
 from facebook import GraphAPI
-from flask import Flask, jsonify, request, redirect #, session
-from app.models import User
+from flask import Flask, jsonify, request #, redirect #, session
 import pymongo
 import os
 
-app = Flask(__name__)
-
 is_prod = os.environ.get('IS_HEROKU', None)
+uri = 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb'
+client = pymongo.MongoClient(uri)
+db = client.get_default_database()
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
 if is_prod:    
     uri  = os.environ.get('MONGODB_URI')
     client = pymongo.MongoClient(uri)
     db = client.get_default_database()
+    print(uri)
+else: 
+    uri = 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb'
+    client = pymongo.MongoClient(uri)
+    db = client.get_default_database()
+    print(uri)
 
 
 @app.route('/authoriseUser', methods=['POST'])
@@ -33,11 +44,12 @@ def signin():
         if 'link' not in profile:
             profile['link'] = ""
 
+        print(profile)
         # Create the user and insert it into the database
-        user = User(id=str(profile['id']), name=profile['name'],
-                        profile_url=profile['link'],
-                        access_token=requestAccessToken)
-        db.users.insert(user)
+        #user = {id}User(id=str(profile['id']), name=profile['name'],
+         #               profile_url=profile['link'],
+         #               access_token=requestAccessToken)
+        #db.users.insert(user)
     elif user.access_token != requestAccessToken:
         # If an existing user, update the access token
         user.access_token = requestAccessToken
@@ -75,5 +87,5 @@ def isAuthorised():
     response.status_code = 200
     return response
 
-if __name__ == "__main__":    
-    app.run()
+if __name__== '__main__':
+    app.run()   
