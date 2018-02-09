@@ -1,13 +1,11 @@
 from app import app
+from datetime import datetime
 from facebook import GraphAPI
-from flask import Flask, jsonify, request #, redirect #, session
+from flask import Flask, jsonify, request
 import pymongo
 import os
 
 is_prod = os.environ.get('IS_HEROKU', None)
-uri = 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb'
-client = pymongo.MongoClient(uri)
-db = client.get_default_database()
 
 @app.route('/')
 def hello_world():
@@ -46,10 +44,13 @@ def signin():
 
         print(profile)
         # Create the user and insert it into the database
-        #user = {id}User(id=str(profile['id']), name=profile['name'],
-         #               profile_url=profile['link'],
-         #               access_token=requestAccessToken)
-        #db.users.insert(user)
+        db.users.insert({
+        'id': uid,
+        'profile_url': profile['link'],
+        'created_time': datetime.utcnow,
+        'name':profile['name'],
+        'access_token': requestAccessToken        
+        })        
     elif user.access_token != requestAccessToken:
         # If an existing user, update the access token
         user.access_token = requestAccessToken
@@ -61,12 +62,7 @@ def signin():
     
 @app.route('/authorisedStatus', methods=['GET'])
 def isAuthorised():
-    
-    db.users.insert({
-        'id': '10',
-        'profile_url': 'Debby Boone',
-        'access_token': '12345'
-    })
+      
     query = {'id': request.args.get('uid','')}
     user = db.users.find_one(query)
     print (user)
