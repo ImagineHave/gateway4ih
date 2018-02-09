@@ -1,1 +1,1 @@
-web: python app.py runserver --bind 0.0.0.0:$PORT --noreload
+web: python app.py runserver
