@@ -8,7 +8,7 @@ import os
 is_prod = os.environ.get('IS_HEROKU', None)
 
 if is_prod:    
-    uri  = os.environ.get('database') #= 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb' 
+    uri  = os.environ.get('MONGODB_URI') #= 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb' 
     client = pymongo.MongoClient(uri)
     db = client.get_default_database()
 
