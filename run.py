@@ -3,14 +3,17 @@ from facebook import GraphAPI
 from flask import Flask, jsonify, request #, session
 from app.models import User
 import pymongo
+import os
 
-#db.create_all()
-uri = 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb' 
-client = pymongo.MongoClient(uri)
-db = client.get_default_database()
+is_prod = os.environ.get('IS_HEROKU', None)
+
+if is_prod:    
+    uri  = os.environ.get('database') #= 'mongodb://gateway:gateway4ih@ds227168.mlab.com:27168/userdb' 
+    client = pymongo.MongoClient(uri)
+    db = client.get_default_database()
 
 if __name__ == "__main__":    
-    app.run() #host='0.0.0.0', port=8000
+    app.run()
 
 @app.route('/authoriseUser', methods=['POST'])
 def signin():
