@@ -1,9 +1,10 @@
-from app import app
 from facebook import GraphAPI
 from flask import Flask, jsonify, request #, session
 from app.models import User
 import pymongo
 import os
+
+app = Flask(__name__)
 
 is_prod = os.environ.get('IS_HEROKU', None)
 
@@ -46,6 +47,7 @@ def signin():
     response = jsonify({user})
     response.status_code = 200
     return response 
+    
     
 @app.route('/authorisedStatus', methods=['GET'])
 def isAuthorised():
